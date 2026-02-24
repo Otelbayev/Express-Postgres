@@ -11,6 +11,10 @@ const app = express();
 app.use(express.json());
 app.use("/api", routes);
 
+app.get("/health", (req, res) => {
+  res.json({ message: "Healthy project" });
+});
+
 app.listen(PORT, async () => {
   try {
     await pool.query("SELECT 1");
