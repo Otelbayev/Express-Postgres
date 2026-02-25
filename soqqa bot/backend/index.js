@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import TelegramBot from "node-telegram-bot-api";
 import routes from "./routes/index.js";
 import pool from "./config/db.js";
+import cors from "cors";
 
 dotenv.config();
 
@@ -46,6 +47,11 @@ bot.on("message", async (msg) => {
   }
 });
 
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 app.use(express.json());
 app.use("/api", routes);
 
