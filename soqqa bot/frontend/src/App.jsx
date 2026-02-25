@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion"; // yoki framer-motion
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus,
   CheckCircle2,
@@ -10,6 +10,8 @@ import {
   ArrowUpRight,
   ArrowDownLeft,
   X,
+  Loader2,
+  AlertCircle,
 } from "lucide-react";
 import axios from "axios";
 
@@ -17,13 +19,14 @@ const App = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState(null);
+  const [error, setError] = useState(false);
 
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-  // const MY_TELEGRAM_ID = "1105787891";
-  const MY_TELEGRAM_ID = "896307244";
+  const MY_TELEGRAM_ID = "1105787891";
+  // const MY_TELEGRAM_ID = "896307244";
 
   const getData = async () => {
     try {
@@ -32,7 +35,8 @@ const App = () => {
       );
       setData(res.data);
     } catch (error) {
-      console.error("Xatolik yuz berdi:", error);
+      console.error("Xatolik yuz berdi:", error.message);
+      setError(true);
     } finally {
       setLoading(false);
     }
@@ -99,8 +103,41 @@ const App = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center font-bold text-indigo-600">
-        Yuklanmoqda...
+      <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+        >
+          <Loader2 className="w-12 h-12 text-blue-600" />
+        </motion.div>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-4 text-lg font-medium text-gray-700"
+        >
+          Yuklanmoqda...
+        </motion.p>
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex flex-col items-center justify-center h-screen bg-red-50 px-4 text-center">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white p-8 rounded-2xl shadow-xl flex flex-col items-center"
+        >
+          <AlertCircle className="w-16 h-16 text-red-500 mb-4" />
+          <h1 className="text-3xl font-bold text-gray-800">
+            Xatolik yuz berdi!
+          </h1>
+          <p className="text-gray-600 mt-2 mb-6">
+            Kechirasiz, sahifani yuklashda muammo yuzaga keldi. Iltimos, qayta
+            urinib ko'ring.
+          </p>
+        </motion.div>
       </div>
     );
 

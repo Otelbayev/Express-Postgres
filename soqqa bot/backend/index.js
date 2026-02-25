@@ -8,7 +8,7 @@ import cors from "cors";
 dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-const TOKEN = "8106962461:AAG-lKupXm18flQpx2LwybzZM7_PP9vuieQ";
+const TOKEN = process.env.BOT_TOKEN;
 
 const app = express();
 
@@ -102,6 +102,7 @@ bot.on("message", async (msg) => {
 app.use(
   cors({
     origin: "http://localhost:5173",
+    credentials: true,
   }),
 );
 app.use(express.json());

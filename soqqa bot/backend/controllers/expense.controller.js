@@ -158,7 +158,6 @@ class ExpenseController {
         return res.status(404).json({ message: "Haqdor topilmadi" });
       const creditorId = creditorResult.rows[0].id;
 
-      // 2. Qarzdorning ID sini ism orqali topamiz (yoki ID orqali yuborsangiz yaxshiroq)
       const debtorResult = await pool.query(
         "SELECT id FROM users WHERE full_name = $1",
         [debtor_full_name],
@@ -168,8 +167,6 @@ class ExpenseController {
         return res.status(404).json({ message: "Qarzdor topilmadi" });
       const debtorId = debtorResult.rows[0].id;
 
-      // 3. TRANSACTION: Siz haqdor bo'lgan va ushbu debtor qarzdor bo'lgan barcha splitslarni yopamiz
-      // Muhim: Faqat siz payer bo'lgan xarajatlardagi ushbu userning ulushlarini yopadi
       await pool.query(
         `
       UPDATE expense_splits 
