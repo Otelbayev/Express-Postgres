@@ -22,7 +22,8 @@ const App = () => {
   const [amount, setAmount] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]);
 
-  const MY_TELEGRAM_ID = "1105787891"; // Sizning ID
+  // const MY_TELEGRAM_ID = "1105787891";
+  const MY_TELEGRAM_ID = "896307244";
 
   const getData = async () => {
     try {

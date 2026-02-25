@@ -47,6 +47,58 @@ bot.on("message", async (msg) => {
   }
 });
 
+const mainMenuKeyboard = {
+  reply_markup: {
+    keyboard: [
+      [{ text: "📊 Balansni ko'rish" }, { text: "ℹ️ Ma'lumot" }],
+      [{ text: "💳 Karta raqamim" }],
+    ],
+    resize_keyboard: true, // Tugmalarni kichraytirish (chiroyli ko'rinishi uchun)
+    one_time_keyboard: false, // Har doim turishi uchun
+  },
+};
+
+bot.onText(/\/start/, async (msg) => {
+  const chatId = msg.chat.id;
+  const from = msg.from;
+
+  const welcomeMsg = `
+👋 *Salom, ${from.first_name}!*
+
+Kvartira hisob-kitob botiga xush kelibsiz. 
+Ushbu bot orqali xarajatlarni adolatli taqsimlashingiz va kimdan qancha qarz borligini ko'rishingiz mumkin.
+
+👇 Quyidagi tugmalardan foydalaning:`;
+
+  bot.sendMessage(chatId, welcomeMsg, {
+    parse_mode: "Markdown",
+    ...mainMenuKeyboard,
+  });
+});
+
+bot.onText(/\/info|ℹ️ Ma'lumot/, (msg) => {
+  const infoMsg = `
+📖 *Botdan foydalanish bo'yicha qo'llanma:*
+
+1️⃣ *Guruhga qo'shish:* Botni kvartira guruhingizga qo'shing va admin qiling.
+2️⃣ *Ro'yxatdan o'tish:* Guruhda bir marta xabar yozsangiz, bot sizni taniydi.
+3️⃣ *Balans:* "📊 Balansni ko'rish" tugmasini bosing.
+4️⃣ *Tasdiqlash:* Pulni olganingizdan so'ng, bot yuborgan xabardagi "Tasdiqlash" tugmasini bosing.
+
+Savollar bo'lsa, @admin ga murojaat qiling.`;
+
+  bot.sendMessage(msg.chat.id, infoMsg, { parse_mode: "Markdown" });
+});
+
+bot.on("message", async (msg) => {
+  if (msg.text === "📊 Balansni ko'rish") {
+    bot.onText(/\/balans/, async (msg) => {
+      const telegram_id = msg.from.id;
+      const chatId = msg.chat.id;
+    });
+  }
+});
+
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -54,10 +106,6 @@ app.use(
 );
 app.use(express.json());
 app.use("/api", routes);
-
-app.get("/health", (req, res) => {
-  res.json({ message: "Healthy project" });
-});
 
 app.listen(PORT, async () => {
   try {
