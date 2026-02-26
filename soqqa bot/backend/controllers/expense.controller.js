@@ -220,6 +220,50 @@ class ExpenseController {
       res.status(500).json({ message: "Server xatosi" });
     }
   }
+  async getArchive(req, res) {
+    const { telegram_id } = req.params;
+
+    try {
+      const userRes = await pool.query(
+        "SELECT id FROM users WHERE telegram_id = $1",
+        [telegram_id],
+      );
+      if (userRes.rows.length === 0)
+        return res.status(404).json({ message: "User topilmadi" });
+      const userId = userRes.rows[0].id;
+
+      const query = `
+  SELECT 
+    e.id, 
+    e.description, 
+    e.amount, 
+    e.created_at,
+    -- To'laganlar ro'yxati (Payer ham shular qatorida bo'lishi mumkin, lekin uni ham filtrlaymiz)
+    COALESCE(JSON_AGG(JSON_BUILD_OBJECT('name', u.full_name, 'amount', es.share_amount)) 
+             FILTER (WHERE es.is_paid = TRUE AND u.id != e.payer_id), '[]') as paid_users,
+    
+    -- Kutilyapti ro'yxati (Eng muhimi: bu yerda Payer bo'lmasligi kerak)
+    COALESCE(JSON_AGG(JSON_BUILD_OBJECT('name', u.full_name, 'amount', es.share_amount)) 
+             FILTER (WHERE es.is_paid = FALSE AND u.id != e.payer_id), '[]') as pending_users
+  FROM expenses e
+  LEFT JOIN expense_splits es ON e.id = es.expense_id
+  LEFT JOIN users u ON es.user_id = u.id
+  WHERE e.payer_id = $1
+  GROUP BY e.id
+  ORDER BY e.created_at DESC;
+`;
+
+      const result = await pool.query(query, [userId]);
+
+      res.json({
+        success: true,
+        archive: result.rows,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Arxivni yuklashda xatolik" });
+    }
+  }
 }
 
 export default new ExpenseController();
