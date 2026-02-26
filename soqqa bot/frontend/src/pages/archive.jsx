@@ -1,7 +1,5 @@
-import React from "react";
-
-const rchive = () => {
-  return <div>rchive</div>;
+const Archive = () => {
+  return <div className="max-w-md mx-auto">Archive</div>;
 };
 
-export default rchive;
+export default Archive;
