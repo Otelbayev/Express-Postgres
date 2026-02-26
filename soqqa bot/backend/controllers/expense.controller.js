@@ -47,9 +47,9 @@ class ExpenseController {
 📊 *Har bir kishi uchun:* ${share.toLocaleString()} so'm
 ━━━━━━━━━━━━━━`;
 
-      if (bot) {
-        await bot.sendMessage(GROUP_ID, message, { parse_mode: "Markdown" });
-      }
+      // if (bot) {
+      //   await bot.sendMessage(GROUP_ID, message, { parse_mode: "Markdown" });
+      // }
 
       res.status(201).json({
         success: true,
@@ -122,6 +122,9 @@ class ExpenseController {
           payables.push({
             full_name: row.full_name,
             amount: Math.abs(balance).toFixed(2),
+            card_number: allUsers.rows.find(
+              (u) => u.telegram_id === row.peer_telegram_id,
+            )?.card_number,
           });
           totlalPayables += Math.abs(balance);
         } else {
@@ -169,11 +172,19 @@ class ExpenseController {
 
       await pool.query(
         `
-      UPDATE expense_splits 
-      SET is_paid = TRUE 
-      WHERE user_id = $1 
-      AND expense_id IN (SELECT id FROM expenses WHERE payer_id = $2)
-      AND is_paid = FALSE`,
+  UPDATE expense_splits
+  SET is_paid = TRUE
+  WHERE is_paid = FALSE
+  AND (
+      (user_id = $1 AND expense_id IN (
+          SELECT id FROM expenses WHERE payer_id = $2
+      ))
+      OR
+      (user_id = $2 AND expense_id IN (
+          SELECT id FROM expenses WHERE payer_id = $1
+      ))
+  )
+  `,
         [debtorId, creditorId],
       );
 
