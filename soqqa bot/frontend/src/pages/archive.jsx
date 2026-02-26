@@ -56,13 +56,13 @@ const ArchivePage = () => {
 
   if (loading)
     return (
-      <div className="h-screen flex items-center justify-center font-bold text-indigo-600">
+      <div className=" flex items-center justify-center font-bold text-indigo-600">
         Yuklanmoqda...
       </div>
     );
 
   return (
-    <div className="bg-slate-50 pb-20 min-h-screen max-w-md mx-auto">
+    <div className="bg-slate-50 pb-20  max-w-md mx-auto">
       <main className="p-4">
         {Object.keys(groupedData).length === 0 ? (
           <div className="text-center py-20 text-slate-400">

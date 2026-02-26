@@ -47,9 +47,9 @@ class ExpenseController {
 📊 *Har bir kishi uchun:* ${share.toLocaleString()} so'm
 ━━━━━━━━━━━━━━`;
 
-      // if (bot) {
-      //   await bot.sendMessage(GROUP_ID, message, { parse_mode: "Markdown" });
-      // }
+      if (bot) {
+        await bot.sendMessage(GROUP_ID, message, { parse_mode: "Markdown" });
+      }
 
       res.status(201).json({
         success: true,
