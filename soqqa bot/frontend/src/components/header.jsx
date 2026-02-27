@@ -3,7 +3,7 @@ import { useHome } from "../context/home-context";
 import { useEffect, useState } from "react";
 
 const Header = () => {
-  const { full_name } = useHome();
+  const { full_name, MY_TELEGRAM_ID } = useHome();
 
   const [rate, setRate] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -42,6 +42,7 @@ const Header = () => {
             <h1 className="text-sm font-bold text-slate-800 leading-none">
               {full_name || "Mehmon"}
             </h1>
+            <p>{MY_TELEGRAM_ID}</p>
           </div>
         </div>
 

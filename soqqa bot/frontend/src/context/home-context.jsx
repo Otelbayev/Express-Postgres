@@ -13,7 +13,7 @@ const HomeProvider = ({ children }) => {
     // Telegram WebApp obyekti mavjudligini tekshiramiz
     const tg = window.Telegram?.WebApp;
     // Agar Telegramda ochilgan bo'lsa ID ni olamiz, aks holda test uchun null (yoki eski ID)
-    return tg?.initDataUnsafe?.user?.id?.toString() || "1105787891";
+    return tg?.initDataUnsafe?.user?.id?.toString() || null;
   }, []);
   // --------------------------------
 
