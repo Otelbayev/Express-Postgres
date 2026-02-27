@@ -101,7 +101,8 @@ bot.on("message", async (msg) => {
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "https://calculation-eight-xi.vercel.app",
     credentials: true,
   }),
 );
